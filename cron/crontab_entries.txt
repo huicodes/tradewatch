@@ -1,0 +1,14 @@
+# TradeWatch scheduled tasks
+# Install with: crontab cron/crontab_entries.txt
+
+# Run full pipeline every weekday at 6:00 AM
+0 6 * * 1-5 /home/youruser/tradewatch/scripts/run_pipeline.sh
+
+# Run health check every 30 minutes during business hours
+*/30 8-18 * * 1-5 /home/youruser/tradewatch/scripts/health_check.sh
+
+# Monitor disk usage every hour
+0 * * * * /home/youruser/tradewatch/scripts/disk_monitor.sh 85
+
+# Rotate logs every Sunday at midnight
+0 0 * * 0 /home/youruser/tradewatch/scripts/log_rotate.sh 7
