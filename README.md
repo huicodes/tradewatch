@@ -34,7 +34,44 @@ TradeWatch simulates a trading environment where:
 
 ## Project Structure
 
-(paste the directory tree from the top of this guide)
+```mermaid
+flowchart TD
+    subgraph Automation["Automation Layer"]
+        CRON[cron scheduler]
+        PIPELINE[run_pipeline.sh]
+        HEALTH[health_check.sh]
+        ROTATE[log_rotate.sh]
+    end
+
+    subgraph Application["Application Layer"]
+        TRADEGEN[trade_generator.py]
+        LOGGEN[log_generator.py]
+        CONFIG[db_config.py]
+        ANALYZER[log_analyzer.py]
+        REPORTER[trade_reporter.py]
+    end
+
+    subgraph Data["Data Layer - MySQL"]
+        TRADES[(trades)]
+        LOGS[(log_events)]
+        INSTRUMENTS[(instruments)]
+        TRADERS[(traders)]
+    end
+
+    CRON --> PIPELINE
+    PIPELINE --> TRADEGEN
+    PIPELINE --> LOGGEN
+    PIPELINE --> ANALYZER
+    PIPELINE --> REPORTER
+    LOGGEN -.log files.-> ANALYZER
+    CONFIG -.credentials.-> TRADEGEN
+    CONFIG -.credentials.-> ANALYZER
+    CONFIG -.credentials.-> REPORTER
+    TRADEGEN --> TRADES
+    ANALYZER --> LOGS
+    REPORTER --> TRADES
+    REPORTER --> LOGS
+```
 
 ## Setup & Installation
 
